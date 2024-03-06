@@ -115,4 +115,8 @@ for l in local_hashes:
     print("A:", l)
     remote_upload(l[0], l[0])
 
+#================================================================
+#Deleting empty folders
+#...
+
 print('Done.')
