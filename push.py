@@ -13,6 +13,7 @@ websitePath = "website/"
 apiUrl = "https://neocities.org/api/"
 config = json.load(open('config.json', 'r'))
 AuthorizationKey = "Bearer " + config['apiKey']
+AuthorizationHeader = {"Authorization": AuthorizationKey}
 
 #================================================================
 #Functions
@@ -64,7 +65,7 @@ print("Started...")
 #================================================================
 #Load tables
 
-response = requests.get(apiUrl + '/list', headers={"Authorization": AuthorizationKey})
+response = requests.get(apiUrl + '/list', headers=AuthorizationHeader)
 server_hashes = neocities_hashes_to_array(response.text)
 print("Files on the server:", len(server_hashes))
 local_hashes = dim_hashes_to_array(read_file_into_string('hashes.txt'))
@@ -74,12 +75,15 @@ print("Files in workspace:", len(local_hashes))
 #Neocities functions
 
 def remote_delete(path):
-
     return
 
 def remote_upload(path, pathSource):
+    with open(websitePath + pathSource, 'rb') as file:
+        response = requests.post(apiUrl + '/upload', headers=AuthorizationHeader, files={path: file})
+        print(response)
 
-    return
+remote_upload('kebab.html', 'index.html')
+exit()
 
 #================================================================
 #Analyze and Update
