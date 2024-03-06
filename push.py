@@ -28,6 +28,16 @@ def neocities_hashes_to_array(txt):
             arr.append([obj[i]['path'], obj[i]['sha1_hash']])
     return arr
 
+def neocities_folders_to_array(txt):
+    arr = []
+    obj = json.loads(txt)["files"]
+    i = len(obj)
+    while i > 0:
+        i -= 1
+        if not ('sha1_hash' in obj[i]):
+            arr.append(obj[i]['path'])
+    return arr
+
 def dim_hashes_to_array(txt):
     arr = []
     i = -1
@@ -41,6 +51,26 @@ def dim_hashes_to_array(txt):
         except:
             break
     return arr
+
+def hash_array_to_folders(arr):
+    folders = []
+    i = len(arr)
+    currentPath = ""
+    f = 0
+    while i > 0:
+        i -= 1
+        f = arr[i][0].rfind("/")
+        if f == -1:
+            continue
+        currentPath = arr[i][0][0:f]
+        f = len(folders)
+        while f > 0:
+            f -= 1
+            if folders[f] == currentPath:
+                f = -1
+        if f == 0:
+            folders.append(currentPath)
+    return folders
 
 def read_file_into_string(file_path):
     try:
@@ -67,8 +97,10 @@ print("Started...")
 
 response = requests.get(apiUrl + '/list', headers=AuthorizationHeader)
 server_hashes = neocities_hashes_to_array(response.text)
+server_folders = neocities_folders_to_array(response.text)
 print("Files on the server:", len(server_hashes))
 local_hashes = dim_hashes_to_array(read_file_into_string('hashes.txt'))
+local_folders = hash_array_to_folders(local_hashes)
 print("Files in workspace:", len(local_hashes))
 
 #================================================================
@@ -84,7 +116,7 @@ def remote_upload(path, pathSource):
         print(response.text)
 
 #================================================================
-#Analyze and Update
+#Analyze and Update - Files
 
 i = -1
 for s in server_hashes:
@@ -116,7 +148,18 @@ for l in local_hashes:
     remote_upload(l[0], l[0])
 
 #================================================================
-#Deleting empty folders
-#...
+#Deleting useless folders
 
+for l in local_folders:
+    i = len(server_folders)
+    while i > 0:
+        i -= 1
+        if server_folders[i] == l:
+            server_folders[i] = False
+for s in server_folders:
+    if s != False:
+        print("DF:", s)
+        remote_delete(s)
+
+#================================================================
 print('Done.')
