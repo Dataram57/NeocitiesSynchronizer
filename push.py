@@ -75,14 +75,15 @@ print("Files in workspace:", len(local_hashes))
 #Neocities functions
 
 def remote_delete(path):
-    return
+    response = requests.post(apiUrl + '/delete', headers=AuthorizationHeader, data={'filenames[]': [path] })
+    print(response.text)
 
 def remote_upload(path, pathSource):
     with open(websitePath + pathSource, 'rb') as file:
         response = requests.post(apiUrl + '/upload', headers=AuthorizationHeader, files={path: file})
         print(response)
 
-remote_upload('kebab.html', 'index.html')
+remote_delete('kebab.html')
 exit()
 
 #================================================================
