@@ -81,17 +81,11 @@ def remote_delete(path):
 def remote_upload(path, pathSource):
     with open(websitePath + pathSource, 'rb') as file:
         response = requests.post(apiUrl + '/upload', headers=AuthorizationHeader, files={path: file})
-        print(response)
-
-remote_delete('kebab.html')
-exit()
+        print(response.text)
 
 #================================================================
 #Analyze and Update
 
-#post_data = {
-#    'password': config['password']
-#}
 i = -1
 for s in server_hashes:
     i += 1
@@ -104,12 +98,7 @@ for s in server_hashes:
         if s[1] != l[1]:
             #Upload and replace old file
             print("M:", l)
-            #post_data['command'] = 'M'
-            #post_data['target'] = l[0]
-            #post_data['hash'] = l[1]
-            #file = open(websitePath + l[0], 'rb')
-            #response = requests.post(config['address'], data = post_data, files = {'file': (l[0], file)})
-            #print(response.text)
+            remote_upload(l[0], l[0])
 
 while True:
     try:
@@ -119,21 +108,11 @@ while True:
 for s in server_hashes:
     #Delete file
     print("D:", s)
-    #remote_delete(s[0])
-    #post_data['command'] = 'D'
-    #post_data['target'] = s[0]
-    #response = requests.post(config['address'], data = post_data)
-    #print(response.text)
+    remote_delete(s[0])
 
 for l in local_hashes:
     #Upload new file
     print("A:", l)
-    #remote_delete(s[0])
-    #post_data['command'] = 'A'
-    #post_data['target'] = l[0]
-    #post_data['hash'] = l[1]
-    #file = open(websitePath + l[0], 'rb')
-    #response = requests.post(config['address'], data = post_data, files = {'file': (l[0], file)})
-    #print(response.text)
+    remote_upload(l[0], l[0])
 
 print('Done.')
