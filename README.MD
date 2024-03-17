@@ -10,14 +10,17 @@ Just like GIT, you can synchronize your neocities website files with the ones yo
     cd NeocitiesSynchronizer
     mkdir website
 
-Your website files must be in a folder called `website`. <br> *Or just edit `push.py`, i don't care `¯\_(ツ)_/¯`*
+Your website files must be in a folder called `website`. <br> *Or just edit `push.py` & `fetch.py`, i don't care `¯\_(ツ)_/¯`*
 
 ### 2. Create and edit `config.json`:
     
     {
-        "apiKey": "YOUR_API_KEY_HERE"
+        "websiteUrl": "https://YOUR_USERNAME_HERE.neocities.org/"
+        ,"apiKey": "YOUR_API_KEY_HERE"
     }
 
-### 3. Run `push.py`
+# Running
 
-    python push.py
+In terminal or cmd type:
+- `python push.py` to push your website.
+- `python fetch.py` to fetch your website.
